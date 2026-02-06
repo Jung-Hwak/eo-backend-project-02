@@ -1,4 +1,4 @@
-package com.example.community.persisternce;
+package com.example.community.persistence;
 
 import com.example.community.domain.message.MessageEntity;
 import com.example.community.domain.user.UserEntity;
