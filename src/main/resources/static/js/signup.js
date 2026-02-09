@@ -128,8 +128,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert(data.message);
                     emailVerified = true;
 
-                    // 인증 완료 후 입력칸 비활성화
-                    document.getElementById('email').disabled = true;
+                    // 인증 완료 후 입력칸 readonly로 변경 (값은 전송됨)
+                    document.getElementById('email').readOnly = true;
                     document.getElementById('verify-code').disabled = true;
                     document.getElementById('verify-email').disabled = true;
                     document.getElementById('verify-confirm').disabled = true;
