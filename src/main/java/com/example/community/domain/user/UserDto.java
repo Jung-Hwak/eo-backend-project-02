@@ -37,12 +37,14 @@ public class UserDto {
     @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "Invalid email format")
     private String email;
 
-    private Boolean emailVerified;
+    @Builder.Default
+    private Boolean emailVerified = true;
 
     @Builder.Default
     private UserRole role = UserRole.USER;
 
-    private Boolean active;
+    @Builder.Default
+    private Boolean active = true;
 
     private LocalDateTime createdAt;
 
