@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,26 +42,37 @@ public class MainController {
      */
     @GetMapping("/")
     public String index(Model model) {
-        List<BoardDto> boardList = boardService.getList();
+        // 1) 전체 게시판 조회
+        List<BoardDto> allBoards = boardService.getList();
+
+        // 2) 공지 카테고리 / 일반 게시판 분리
+        List<BoardDto> noticeBoardList = allBoards.stream()
+                .filter(b -> b.getTitle() != null && b.getTitle().contains("공지"))
+                .toList();
+
+        List<BoardDto> boardList = allBoards.stream()
+                .filter(b -> b.getTitle() == null || !b.getTitle().contains("공지"))
+                .toList();
+
+        model.addAttribute("noticeBoardList", noticeBoardList);
         model.addAttribute("boardList", boardList);
 
-        boardList.stream()
-                .filter(b -> "공지사항".equals(b.getTitle()))
-                .findFirst()
-                .ifPresentOrElse(board -> {
-                    var pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
-                    var noticePage = postService.getList(board.getId(), pageable);
-                    model.addAttribute("noticeList", noticePage.getContent());
-                    model.addAttribute("noticeBoardId", board.getId());
-                }, () -> {
-                    model.addAttribute("noticeList", List.of());
-                    model.addAttribute("noticeBoardId", null);
-                });
+        // 3) 메인 가운데 공지 영역(최신 5개)
+        if (!noticeBoardList.isEmpty()) {
+            Long noticeBoardId = noticeBoardList.get(0).getId();
+            Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
+            var noticePage = postService.getList(noticeBoardId, pageable);
+            model.addAttribute("noticeList", noticePage.getContent());
+        } else {
+            model.addAttribute("noticeList", List.of());
+        }
 
+        // 4) 기존 유지(너 프로젝트에서 쓰는 값들)
         model.addAttribute("postPage", Page.empty());
         model.addAttribute("tempPosts", createTempPosts());
         model.addAttribute("searchType", "");
         model.addAttribute("keyword", "");
+
         return "index";
     }
 

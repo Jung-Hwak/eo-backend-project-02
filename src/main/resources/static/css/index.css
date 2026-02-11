@@ -72,11 +72,35 @@ body {
 }
 
 .sidebar-section > h3 {
+    position: relative;
     font-size: 16px;
     margin-bottom: 12px;
     color: #333;
     padding-bottom: 8px;
     border-bottom: 2px solid #667eea;
+}
+
+.add-board-btn {
+    display: block;
+    position: absolute;
+    background-image: url("/images/plus.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    top: 3px;
+    right: 0;
+
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.add-board-btn > span{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
 }
 
 .sidebar-menu {
