@@ -1,0 +1,105 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 제목 */
+#page-title {
+    font-size: 25px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    color: #333;
+
+    border-bottom: 2px solid #667eea;
+}
+
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* 입력창 */
+.form-group > input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+
+.form-group > input:focus {
+    outline: none;
+    border-color: #888;
+}
+
+/* 버튼 그룹 */
+#btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 기본 버튼 */
+#btn-group > button:first-child,
+#btn-group > button:last-child {
+    padding: 0;
+    border: none;
+    background: none;
+
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    transition: background-color 0.2s ease;
+}
+
+/* 기본 버튼 hover */
+#btn-group > button:first-child:hover,
+#btn-group > button:last-child:hover {
+    background-color: #e0e0e0;
+}
+
+/* 닫기 버튼 */
+#muted {
+    background-color: #ffffff;
+}
+
+/* 삭제 버튼 */
+
+#deleteForm {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+#danger {
+    padding: 0;
+    border: none;
+    background: none;
+
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+
+    border: 1px solid #ccc;
+    background-color: #e74c3c;
+    transition: background-color 0.2s ease;
+}
+
+#danger:hover {
+    background-color: #c0392b;
+}

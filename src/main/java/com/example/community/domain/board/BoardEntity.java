@@ -33,9 +33,13 @@ public class BoardEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "category", length = 20, nullable = false)
+    private String category;
+
     @Builder
-    public BoardEntity(String title) {
+    public BoardEntity(String title, String category) {
         this.title = title;
+        this.category = category;
     }
 
     public BoardEntity updateTitle(String title) {
@@ -45,12 +49,16 @@ public class BoardEntity {
 
     public BoardEntity update(@NotNull BoardDto boardDto) {
         this.title = boardDto.getTitle();
+        if (boardDto.getCategory() != null) {
+            this.category = boardDto.getCategory();
+        }
         return this;
     }
 
     public static BoardEntity from(@NotNull BoardDto boardDto) {
         return BoardEntity.builder()
                 .title(boardDto.getTitle())
+                .category(boardDto.getCategory())
                 .build();
     }
 }

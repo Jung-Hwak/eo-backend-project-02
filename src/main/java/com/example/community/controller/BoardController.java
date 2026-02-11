@@ -1,6 +1,7 @@
 package com.example.community.controller;
 
 import com.example.community.domain.board.BoardDto;
+import com.example.community.domain.board.BoardEntity;
 import com.example.community.domain.post.ResultDto;
 import com.example.community.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,16 @@ public class BoardController {
      * 게시판 생성 페이지 이동
      */
     @GetMapping("/write")
-    public String write(Model model) {
-        log.info("Moving to Board Create Form");
-        model.addAttribute("boardDto", new BoardDto());
+    public String write(@RequestParam(required = false) String category, Model model) {
+        log.info("Moving to Board Create Form, category={}", category);
+
+        BoardDto boardDto = new BoardDto();
+        boardDto.setCategory(category);
+
+        model.addAttribute("boardDto", boardDto);
         model.addAttribute("action", "/board/write");
         model.addAttribute("title", "새 게시판 생성");
+
         return "admin/board-write";
     }
 
@@ -48,7 +54,7 @@ public class BoardController {
         log.info("Creating Board: {}", boardDto);
         boardService.create(boardDto);
         redirectAttributes.addFlashAttribute("result", ResultDto.of(true, "write"));
-        return "redirect:/board";
+        return "admin/board-success";
     }
 
     /**
@@ -57,9 +63,13 @@ public class BoardController {
     @GetMapping("/update")
     public String update(@RequestParam Long id, Model model) {
         log.info("Moving to Board Update Form - ID: {}", id);
-        boardService.read(id).ifPresent(dto -> model.addAttribute("boardDto", dto));
+
+        BoardDto boardDto = boardService.read(id).orElseGet(BoardDto::new);
+        model.addAttribute("boardDto", boardDto);
+
         model.addAttribute("action", "/board/update");
         model.addAttribute("title", "게시판 이름 수정");
+        model.addAttribute("category", boardDto.getCategory());
         return "admin/board-write";
     }
 
@@ -72,7 +82,7 @@ public class BoardController {
         if (boardService.update(boardDto).isPresent()) {
             redirectAttributes.addFlashAttribute("result", ResultDto.of(true, "update"));
         }
-        return "redirect:/board";
+        return "admin/board-success";
     }
 
     /**
@@ -84,6 +94,6 @@ public class BoardController {
         if (boardService.delete(id)) {
             redirectAttributes.addFlashAttribute("result", ResultDto.of(true, "delete"));
         }
-        return "redirect:/board";
+        return "admin/board-success";
     }
 }

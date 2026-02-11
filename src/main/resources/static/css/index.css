@@ -81,6 +81,10 @@ body {
 }
 
 .add-board-btn {
+    padding: 0;
+    border: none;
+    background: none;
+
     display: block;
     position: absolute;
     background-image: url("/images/plus.png");
@@ -101,12 +105,25 @@ body {
     clip: rect(0, 0, 0, 0);
 }
 
+
 .sidebar-menu {
     list-style: none;
 }
 
 .sidebar-menu > li {
     margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 4px;
+
+    transition: background-color 0.2s ease;
+}
+
+/* 버튼에 hover되지 않았을 때만 li hover 적용 */
+.sidebar-menu > li:hover:not(:has(.board-manage-btn:hover)):not(:has(.add-board-btn:hover)) {
+    background-color: #e0e0e0;
 }
 
 .sidebar-menu > li > a {
@@ -116,11 +133,52 @@ body {
     display: block;
     padding: 5px;
     border-radius: 4px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .sidebar-menu > li > a:hover {
-    background-color: #e0e0e0;
-    color: #333;
+    background-color: transparent;
+}
+
+/* 게시판 관리 버튼 */
+.board-manage-btn {
+    padding: 0;
+    border: none;
+    background: none;
+
+    position: relative;
+
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+
+    background-image: url("/images/icon-three-circles.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
+
+.board-manage-btn > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.board-manage-btn,
+.add-board-btn {
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.board-manage-btn:hover,
+.add-board-btn:hover {
+    background-color: #d5d5d5;
+    border-radius: 4px;
 }
 
 .sidebar-menu > li > span {

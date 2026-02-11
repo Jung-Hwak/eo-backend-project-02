@@ -41,9 +41,16 @@ public class BoardServiceImpl implements BoardService {
     public Optional<BoardDto> update(@NotNull BoardDto boardDto) {
         log.info("UPDATE: boardDto = {}", boardDto);
 
-        checkTitleAvailability(boardDto.getTitle());
-
         return boardRepository.findById(boardDto.getId()).map(boardEntity -> {
+
+            String newTitle = boardDto.getTitle();
+            String oldTitle = boardEntity.getTitle();
+
+            // 제목이 바뀐 경우에만 중복 체크
+            if (!oldTitle.equals(newTitle)) {
+                checkTitleAvailability(newTitle);
+            }
+
             BoardEntity updatedEntity = boardRepository.save(boardEntity.update(boardDto));
             return BoardDto.from(updatedEntity);
         });

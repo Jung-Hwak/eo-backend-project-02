@@ -57,11 +57,11 @@ public class MainController {
 
         // 2) 공지 카테고리 / 일반 게시판 분리
         List<BoardDto> noticeBoardList = allBoards.stream()
-                .filter(b -> b.getTitle() != null && b.getTitle().contains("공지"))
+                .filter(b -> "NOTICE".equals(b.getCategory()))
                 .toList();
 
         List<BoardDto> boardList = allBoards.stream()
-                .filter(b -> b.getTitle() == null || !b.getTitle().contains("공지"))
+                .filter(b -> b.getCategory() == null || !"NOTICE".equals(b.getCategory()))
                 .toList();
 
         model.addAttribute("noticeBoardList", noticeBoardList);

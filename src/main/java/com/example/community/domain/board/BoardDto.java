@@ -20,6 +20,8 @@ public class BoardDto {
     @Size(min = 2, max = 50, message = "Title must be between 2 and 50 characters")
     private String title;
 
+    private String category;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -27,6 +29,7 @@ public class BoardDto {
         return BoardDto.builder()
                 .id(boardEntity.getId())
                 .title(boardEntity.getTitle())
+                .category(boardEntity.getCategory())
                 .createdAt(boardEntity.getCreatedAt())
                 .updatedAt(boardEntity.getUpdatedAt())
                 .build();

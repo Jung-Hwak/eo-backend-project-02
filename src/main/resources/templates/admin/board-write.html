@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">게시판 관리</title>
+    <link rel="stylesheet" href="/css/board-write.css">
+    <script src="/js/board-write.js"></script>
 </head>
 <body>
+
+<h1 id="page-title" th:text="${title}">게시판 관리</h1>
+
+<!-- 생성/수정 -->
+<form id="saveForm" th:action="@{${action}}" th:object="${boardDto}" method="post">
+
+    <!-- 수정일 때만 id 존재 -->
+    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{category}">
+
+    <div class="form-group">
+        <input type="text" th:field="*{title}" placeholder="게시판 제목을 입력하세요" required>
+    </div>
+
+    <div id="btn-group">
+        <button type="submit" th:text="${boardDto.id == null ? '생성' : '수정'}">저장</button>
+
+        <button type="button" id="muted">닫기</button>
+    </div>
+</form>
+
+<!-- 삭제: 수정 화면에서만 -->
+<form id="deleteForm" th:if="${boardDto.id != null}" th:action="@{/board/delete}" method="get">
+    <input type="hidden" name="id" th:value="${boardDto.id}">
+    <button type="submit" id="danger">삭제</button>
+</form>
 
 </body>
 </html>
