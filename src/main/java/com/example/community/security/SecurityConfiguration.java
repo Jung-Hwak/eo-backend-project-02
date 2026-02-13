@@ -46,6 +46,9 @@ public class SecurityConfiguration {
         httpSecurity
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
                 );
 
         // 인가(authorization)에 대한 설정

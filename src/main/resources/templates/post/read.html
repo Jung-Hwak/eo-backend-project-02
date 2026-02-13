@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${postDto.title}">게시글</title>
+    <title th:text="${postDto.title}">게시물 상세보기</title>
 
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -184,7 +184,7 @@
                     <p><span sec:authentication="name">사용자</span>님</p>
                     <div class="profile-links">
                         <a th:href="@{/mypage}">마이페이지</a>
-                        <a th:href="@{/messages}">쪽지함</a>
+                        <a th:href="@{/messages/all}" onclick="openMessagePopup(this.href); return false;">쪽지함</a>
                         <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/dashboard}">관리자</a>
                         <form th:action="@{/logout}" method="post" class="logout-form">
                             <button type="submit" class="logout-btn">로그아웃</button>

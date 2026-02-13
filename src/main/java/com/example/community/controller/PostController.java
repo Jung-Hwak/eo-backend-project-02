@@ -125,6 +125,21 @@ public class PostController {
         model.addAttribute("criteria", criteria);
         model.addAttribute("postDto", postService.read(id));
 
+        // 인기 게시글 데이터 조회
+        Pageable popularPageable = PageRequest.of(0, 10);
+        model.addAttribute("popularPosts", postService.getPopularPosts(popularPageable).getContent());
+
+        // 게시판 카테고리 목록 조회
+        List<BoardDto> allBoards = boardService.getList();
+
+        // 카테고리가 'NOTICE'인 게시판만 필터링
+        model.addAttribute("noticeBoardList", boardService
+                .getList().stream().filter(b -> "NOTICE".equals(b.getCategory())).toList());
+
+        // 카테고리가 없거나 'NOTICE'가 아닌 일반 게시판만 필터링
+        model.addAttribute("boardList", boardService
+                .getList().stream().filter(b -> b.getCategory() == null || !"NOTICE".equals(b.getCategory())).toList());
+
         return "post/read";
     }
 
