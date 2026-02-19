@@ -34,4 +34,7 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     // 조회수 TOP 10 (인기 게시글)
     @Query("SELECT p FROM PostEntity p ORDER BY p.viewCount DESC")
     Page<PostEntity> findTopByViewCount(Pageable pageable);
+
+    // 내가 작성한 게시글 목록
+    Page<PostEntity> findByUserId(Long userId, Pageable pageable);
 }

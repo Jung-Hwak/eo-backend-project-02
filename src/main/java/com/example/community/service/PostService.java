@@ -68,4 +68,12 @@ public interface PostService {
      * @return 인기 게시글 페이지
      */
     Page<PostDto> getPopularPosts(Pageable pageable);
+
+    /**
+     * 내가 작성한 게시글 목록 조회
+     * @param userId 작성자(로그인 사용자) ID
+     * @param pageable 페이징 정보
+     * @return 게시글 페이지
+     */
+    Page<PostDto> getMyPosts(Long userId, Pageable pageable);
 }
