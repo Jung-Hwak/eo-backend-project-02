@@ -95,4 +95,13 @@ public class BoardServiceImpl implements BoardService {
             throw new IllegalArgumentException("Board title is already in use");
         }
     }
+
+    @Override
+    public List<BoardDto> getByIds(List<Long> ids) {
+        log.info("GET BY IDS: {}", ids);
+
+        return boardRepository.findAllById(ids).stream()
+                .map(BoardDto::from)
+                .collect(Collectors.toList());
+    }
 }
