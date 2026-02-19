@@ -1,6 +1,7 @@
 /**
  * 쪽지 목록 기능 스크립트
  * - 목록 선택, 상세보기 이동, 대량 삭제(일반/영구) 처리
+ * - CSRF 토큰은 message-com.js에서 처리
  */
 document.addEventListener('DOMContentLoaded', function() {
     // 1. 행 클릭 시 상세보기 이동 (체크박스 클릭 시 제외)
@@ -47,13 +48,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 `선택한 ${selectedIds.length}개의 쪽지를 삭제하시겠습니까?`;
 
             if (confirm(confirmMsg)) {
+                const headers = MessageCommon.getCsrfHeaders();
+
                 // 컨트롤러에 추가한 /bulk 경로 호출
                 const endpoint = isTrashPage ? '/messages/api/delete/bulk' : '/messages/api/trash/bulk';
 
                 fetch(endpoint, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ids: selectedIds })
+                    headers: headers,
+                    body: JSON.stringify({ ids: selectedIds }),
+                    credentials: 'same-origin'
                 })
                     .then(res => {
                         if (res.ok) {
