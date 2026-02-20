@@ -186,6 +186,9 @@ public class UserServiceImpl implements UserService {
         if (!newPassword.equals(newPasswordConfirm)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
+            throw new IllegalArgumentException("기존 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.");
+        }
 
         // 암호화 후 저장
         String encoded = passwordEncoder.encode(newPassword);

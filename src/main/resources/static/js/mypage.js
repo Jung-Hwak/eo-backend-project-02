@@ -305,6 +305,34 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!isStep2Open) {
             e.preventDefault();
             setPwMsg("현재 비밀번호 확인을 먼저 진행해주세요.", "error");
+            return;
+        }
+
+        // step2 입력값 검증
+        const currentPw = step1?.querySelector('input[name="currentPassword"]')?.value.trim() ?? "";
+        const newPw = step2?.querySelector('input[name="newPassword"]')?.value.trim() ?? "";
+        const newPwC = step2?.querySelector('input[name="newPasswordConfirm"]')?.value.trim() ?? "";
+
+        // 1) 빈 값
+        if (!newPw || !newPwC) {
+            e.preventDefault();
+            setPwMsg("새 비밀번호와 확인을 입력해주세요.", "error");
+            return;
+        }
+
+        // 2) 불일치
+        if (newPw !== newPwC) {
+            e.preventDefault();
+            setPwMsg("새 비밀번호가 일치하지 않습니다.", "error");
+            return;
+        }
+
+        // 3) 기존(현재) 비밀번호와 동일
+        // (currentPw는 사용자가 입력한 현재 비번이니까 비교 가능)
+        if (currentPw && newPw === currentPw) {
+            e.preventDefault();
+            setPwMsg("기존 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.", "error");
+            return;
         }
     });
 
