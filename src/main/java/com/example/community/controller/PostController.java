@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -214,6 +213,20 @@ public class PostController {
         // 카테고리가 없거나 'NOTICE'가 아닌 일반 게시판만 필터링
         model.addAttribute("boardList", boardService
                 .getList().stream().filter(b -> b.getCategory() == null || !"NOTICE".equals(b.getCategory())).toList());
+
+        // 이전/다음 게시물 조회
+        var previousPost = postService.getPreviousPost(boardId, id);
+        var nextPost = postService.getNextPost(boardId, id);
+
+        if (previousPost.isPresent()) {
+            model.addAttribute("previousPost", previousPost.get());
+            log.info("이전 게시물 존재: id={}, title={}", previousPost.get().getId(), previousPost.get().getTitle());
+        }
+
+        if (nextPost.isPresent()) {
+            model.addAttribute("nextPost", nextPost.get());
+            log.info("다음 게시물 존재: id={}, title={}", nextPost.get().getId(), nextPost.get().getTitle());
+        }
 
         return "post/read";
     }

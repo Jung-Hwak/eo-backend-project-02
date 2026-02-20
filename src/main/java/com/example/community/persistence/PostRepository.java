@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     // 게시판별 게시글 목록
@@ -59,4 +61,10 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     // 내가 작성한 게시글 목록
     Page<PostEntity> findByUserId(Long userId, Pageable pageable);
+
+    // 이전 게시물: ID > currentId인 가장 작은 것 (최신순)
+    Optional<PostEntity> findFirstByBoardIdAndIdGreaterThanOrderByIdAsc(Long boardId, Long currentId);
+
+    // 다음 게시물: ID < currentId인 가장 큰 것 (최신순)
+    Optional<PostEntity> findFirstByBoardIdAndIdLessThanOrderByIdDesc(Long boardId, Long currentId);
 }

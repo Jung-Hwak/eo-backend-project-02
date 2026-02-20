@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostService {
     /**
@@ -88,4 +89,19 @@ public interface PostService {
      */
     Page<PostDto> getMyPosts(Long userId, Pageable pageable);
 
+    /**
+     * 이전 게시물 조회 (게시판별, 최신순)
+     * @param boardId 게시판 ID
+     * @param currentPostId 현재 게시글 ID
+     * @return 이전 게시글 (없으면 empty)
+     */
+    Optional<PostDto> getPreviousPost(Long boardId, Long currentPostId);
+
+    /**
+     * 다음 게시물 조회 (게시판별, 최신순)
+     * @param boardId 게시판 ID
+     * @param currentPostId 현재 게시글 ID
+     * @return 다음 게시글 (없으면 empty)
+     */
+    Optional<PostDto> getNextPost(Long boardId, Long currentPostId);
 }

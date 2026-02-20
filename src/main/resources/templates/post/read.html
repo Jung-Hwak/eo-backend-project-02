@@ -125,35 +125,58 @@
 
                     <div class="post-content" th:text="*{content}">내용</div>
 
+                    <!-- 버튼 영역: 목록/수정/삭제 + 이전/다음 -->
                     <div class="post-actions">
+                        <!-- 왼쪽: 목록/수정/삭제 -->
+                        <div class="buttons-left">
+                            <a class="btn" th:href="@{/board/{boardId}/post/list(boardId=${postDto.boardId})}">
+                                목록
+                            </a>
 
-                        <a class="btn" th:href="@{/board/{boardId}/post/list(boardId=${postDto.boardId})}">
-                            목록
-                        </a>
+                            <a class="btn"
+                               sec:authorize="isAuthenticated()"
+                               th:if="${postDto.userId} == ${#authentication.principal.id}"
+                               th:href="@{/board/{boardId}/post/update(boardId=${postDto.boardId}, id=${postDto.id})}">
+                                수정
+                            </a>
 
-                        <a class="btn"
-                           sec:authorize="isAuthenticated()"
-                           th:if="${postDto.userId} == ${#authentication.principal.id}"
-                           th:href="@{/board/{boardId}/post/update(boardId=${postDto.boardId}, id=${postDto.id})}">
-                            수정
-                        </a>
+                            <form sec:authorize="isAuthenticated()"
+                                  th:if="${postDto.userId} == ${#authentication.principal.id}
+                                    or ${#authorization.expression('hasRole(''ADMIN'')')}"
+                                  th:action="@{/board/{boardId}/post/delete(
+                                      boardId=${postDto.boardId},
+                                      id=${postDto.id},
+                                      page=${param.page != null ? param.page : 1},
+                                      size=${param.size != null ? param.size : 10},
+                                      searchType=${param.searchType != null ? param.searchType : ''},
+                                      keyword=${param.keyword != null ? param.keyword : ''}
+                                  )}"
+                                  method="post"
+                                  onsubmit="return confirm('게시글을 삭제할까요?');">
+                                <button type="submit" class="btn btn-danger">삭제</button>
+                            </form>
+                        </div>
 
-                        <form sec:authorize="isAuthenticated()"
-                              th:if="${postDto.userId} == ${#authentication.principal.id}
-                                or ${#authorization.expression('hasRole(''ADMIN'')')}"
-                              th:action="@{/board/{boardId}/post/delete(
-                                  boardId=${postDto.boardId},
-                                  id=${postDto.id},
-                                  page=${param.page != null ? param.page : 1},
-                                  size=${param.size != null ? param.size : 10},
-                                  searchType=${param.searchType != null ? param.searchType : ''},
-                                  keyword=${param.keyword != null ? param.keyword : ''}
-                              )}"
-                              method="post"
-                              onsubmit="return confirm('게시글을 삭제할까요?');">
-                            <button type="submit" class="btn btn-danger">삭제</button>
-                        </form>
+                        <!-- 오른쪽: 이전/다음 게시물 -->
+                        <div class="buttons-right">
+                            <!-- 이전 게시물 -->
+                            <th:block th:if="${previousPost != null}">
+                                <a th:href="@{/board/{boardId}/post/read(boardId=${boardId}, id=${previousPost.id}, page=${criteria.page}, size=${criteria.size})}"
+                                   class="btn btn-nav btn-previous"
+                                   th:title="'이전: ' + ${previousPost.title}">
+                                    ◀ 이전
+                                </a>
+                            </th:block>
 
+                            <!-- 다음 게시물 -->
+                            <th:block th:if="${nextPost != null}">
+                                <a th:href="@{/board/{boardId}/post/read(boardId=${boardId}, id=${nextPost.id}, page=${criteria.page}, size=${criteria.size})}"
+                                   class="btn btn-nav btn-next"
+                                   th:title="'다음: ' + ${nextPost.title}">
+                                    다음 ▶
+                                </a>
+                            </th:block>
+                        </div>
                     </div>
 
                 </div>

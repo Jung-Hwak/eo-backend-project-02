@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -291,13 +292,45 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     @Transactional(readOnly = true)
-        public List<PostDto> findTop10ByUserId(Long userId) {
+    public List<PostDto> findTop10ByUserId(Long userId) {
 
-            Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         return postRepository.findByUserId(userId, pageable)
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 이전 게시물 조회 (게시판별, 최신순)
+     * ID가 현재 게시물보다 크고 가장 작은 게시물
+     * @param boardId 게시판 ID
+     * @param currentPostId 현재 게시글 ID
+     * @return 이전 게시글 (없으면 empty)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<PostDto> getPreviousPost(Long boardId, Long currentPostId) {
+        log.info("이전 게시물 조회: boardId={}, currentPostId={}", boardId, currentPostId);
+
+        return postRepository.findFirstByBoardIdAndIdGreaterThanOrderByIdAsc(boardId, currentPostId)
+                .map(this::convertToDto);
+    }
+
+    /**
+     * 다음 게시물 조회 (게시판별, 최신순)
+     * ID가 현재 게시물보다 작고 가장 큰 게시물
+     * @param boardId 게시판 ID
+     * @param currentPostId 현재 게시글 ID
+     * @return 다음 게시글 (없으면 empty)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<PostDto> getNextPost(Long boardId, Long currentPostId) {
+        log.info("다음 게시물 조회: boardId={}, currentPostId={}", boardId, currentPostId);
+
+        return postRepository.findFirstByBoardIdAndIdLessThanOrderByIdDesc(boardId, currentPostId)
+                .map(this::convertToDto);
     }
 }
