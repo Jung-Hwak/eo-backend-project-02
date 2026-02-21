@@ -154,6 +154,7 @@ public class CommentServiceImpl implements CommentService {
 
     // 전제 댓글 조회
     @Override
+    @Transactional(readOnly = true)
     public Page<CommentDto> getAllComments(Pageable pageable) {
         return commentRepository.findAll(pageable)
                 .map(this::convertToDto);
