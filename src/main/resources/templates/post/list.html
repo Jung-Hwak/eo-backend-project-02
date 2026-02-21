@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/list.css">
     <script src="/js/index.js" defer></script>
+    <script src="/js/common.js" defer></script>
 </head>
 <body>
 
@@ -227,49 +228,7 @@
         <!-- 오른쪽 사이드바 -->
         <aside id="right-sidebar">
 
-            <!-- 비로그인 시: 로그인 폼 -->
-            <div id="auth-box" sec:authorize="!isAuthenticated()">
-                <h3>로그인</h3>
-                <form th:action="@{/login}" method="post">
-                    <input type="text"
-                           name="username"
-                           placeholder="아이디"
-                           autocomplete="username"
-                           required>
-                    <input type="password"
-                           name="password"
-                           placeholder="비밀번호"
-                           autocomplete="current-password"
-                           required>
-
-                    <!-- 소셜 로그인 버튼 -->
-                    <button type="button" class="btn-social-login" onclick="location.href='/login'">
-                        소셜 로그인
-                    </button>
-
-                    <button type="submit">로그인</button>
-                </form>
-                <div class="auth-links">
-                    <a th:href="@{/signup}">회원가입</a>
-                    <a th:href="@{/find-password}">ID/PW 찾기</a>
-                </div>
-            </div>
-
-            <!-- 로그인 후: 사용자 정보 (로그인 폼과 같은 위치) -->
-            <div id="auth-box2" sec:authorize="isAuthenticated()">
-                <div class="user-info">
-                    <p><span sec:authentication="principal.nickname">사용자</span>님</p>
-                    <div class="profile-links">
-                        <a th:href="@{/mypage}">마이페이지</a>
-                        <a href="javascript:void(0);"
-                           th:onclick="|openMessagePopup('@{/messages/all}')|">쪽지함</a>
-                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/dashboard}">관리자</a>
-                        <form th:action="@{/logout}" method="post" class="logout-form">
-                            <button type="submit" class="logout-btn">로그아웃</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            <th:block th:replace="fragments/nav :: navAuth"></th:block>
 
             <!-- 인기 게시글 랭킹 -->
             <div id="ranking-section">
