@@ -134,6 +134,8 @@
                                 목록
                             </a>
 
+
+
                             <a class="btn"
                                sec:authorize="isAuthenticated()"
                                th:if="${postDto.userId} == ${#authentication.principal.id}"
@@ -156,6 +158,18 @@
                                   onsubmit="return confirm('게시글을 삭제할까요?');">
                                 <button type="submit" class="btn btn-danger">삭제</button>
                             </form>
+
+
+                        </div>
+
+                        <!-- 가운데: 좋아요 -->
+                        <div class="like-area" sec:authorize="isAuthenticated()">
+                            <button type="button" id="likeBtn" class="btn"
+                                    th:data-post-id="${postDto.id}"
+                                    th:data-board-id="${postDto.boardId}">
+                                <span id="likeIcon" th:classappend="${isLiked} ? ' active' : ''"></span>
+                                <span id="likeCount" th:text="${postDto.likesCount}">0</span>
+                            </button>
                         </div>
 
                         <!-- 오른쪽: 이전/다음 게시물 -->

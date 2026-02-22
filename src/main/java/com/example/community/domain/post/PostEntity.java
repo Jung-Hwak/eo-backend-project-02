@@ -121,4 +121,16 @@ public class PostEntity {
         return this;
     }
 
+    // 좋아요 증가
+    public PostEntity increaseLikesCount() {
+        this.likesCount = (this.likesCount == null ? 1 : this.likesCount + 1);
+        return this;
+    }
+
+    // 좋아요 감소
+    public PostEntity decreaseLikesCount() {
+        this.likesCount = (this.likesCount == null || this.likesCount <= 0 ? 0 : this.likesCount - 1);
+        return this;
+    }
+
 }

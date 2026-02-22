@@ -314,4 +314,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 초기 댓글 로드
     loadComments();
+
+    // 좋아요 기능
+    const likeBtn = document.getElementById('likeBtn');
+
+    if (likeBtn) {
+        likeBtn.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            const boardId = this.getAttribute('data-board-id');
+
+            fetch('/board/' + boardId + '/post/like/' + postId, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: getFetchHeaders()
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    document.getElementById('likeCount').textContent = data.likesCount;
+
+                    const likeIcon = document.getElementById('likeIcon');
+                    if (data.liked) {
+                        likeIcon.classList.add('active');
+                    } else {
+                        likeIcon.classList.remove('active');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('좋아요 오류:', error);
+                });
+        });
+    }
 });

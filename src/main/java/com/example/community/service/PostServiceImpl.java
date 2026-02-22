@@ -2,8 +2,10 @@ package com.example.community.service;
 
 import com.example.community.domain.post.PostDto;
 import com.example.community.domain.post.PostEntity;
+import com.example.community.domain.post.PostLikeEntity;
 import com.example.community.domain.user.UserEntity;
 import com.example.community.domain.user.UserRole;
+import com.example.community.persistence.PostLikeRepository;
 import com.example.community.persistence.PostRepository;
 import com.example.community.persistence.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,7 +18,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostLikeRepository postLikeRepository;
 
     private String getNickname(Long userId) {
         return userRepository.findById(userId)
@@ -332,5 +337,39 @@ public class PostServiceImpl implements PostService {
 
         return postRepository.findFirstByBoardIdAndIdLessThanOrderByIdDesc(boardId, currentPostId)
                 .map(this::convertToDto);
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> toggleLike(Long postId, Long userId) {
+        PostEntity post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found: " + postId));
+
+        Map<String, Object> result = new HashMap<>();
+
+        if (postLikeRepository.existsByPostIdAndUserId(postId, userId)) {
+            // 좋아요 취소
+            postLikeRepository.findByPostIdAndUserId(postId, userId)
+                    .ifPresent(postLikeRepository::delete);
+            post.decreaseLikesCount();
+            result.put("liked", false);
+        } else {
+            // 좋아요 추가
+            postLikeRepository.save(PostLikeEntity.builder()
+                    .postId(postId)
+                    .userId(userId)
+                    .build());
+            post.increaseLikesCount();
+            result.put("liked", true);
+        }
+
+        result.put("likesCount", post.getLikesCount());
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isLiked(Long postId, Long userId) {
+        return postLikeRepository.existsByPostIdAndUserId(postId, userId);
     }
 }

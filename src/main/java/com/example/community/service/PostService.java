@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface PostService {
@@ -104,4 +105,10 @@ public interface PostService {
      * @return 다음 게시글 (없으면 empty)
      */
     Optional<PostDto> getNextPost(Long boardId, Long currentPostId);
+
+    // 좋아요 토글 (좋아요/취소)
+    Map<String, Object> toggleLike(Long postId, Long userId);
+
+    // 좋아요 여부 확인
+    boolean isLiked(Long postId, Long userId);
 }

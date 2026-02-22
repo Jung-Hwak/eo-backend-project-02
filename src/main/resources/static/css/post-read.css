@@ -350,6 +350,30 @@
 .comment-actions button.del:hover {
     background-color: #fef1f1;
 }
+/*좋아요 버튼*/
+#likeIcon::before {
+    content: '♡';
+    color: #aaa;
+    font-size: 15px;
+}
+
+#likeIcon.active::before {
+    content: '♥';
+    color: red;
+    font-size: 15px;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.like-area button:hover {
+    background-color: #fff0f0;
+    border-color: red;
+}
+
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
@@ -383,4 +407,5 @@
         align-items: flex-start;
         gap: 8px;
     }
+
 }

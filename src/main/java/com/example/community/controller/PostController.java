@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/board/{boardId}/post")
@@ -199,6 +201,13 @@ public class PostController {
         model.addAttribute("currentUserId", currentUserId);
         model.addAttribute("isAdmin", isAdmin);
 
+        // 좋아요 기능
+        boolean isLiked = false;
+        if (userDetails != null) {
+            isLiked = postService.isLiked(id, userDetails.getId());
+        }
+        model.addAttribute("isLiked", isLiked);
+
         // 인기 게시글 데이터 조회
         Pageable popularPageable = PageRequest.of(0, 10);
         model.addAttribute("popularPosts", postService.getPopularPosts(popularPageable).getContent());
@@ -213,6 +222,7 @@ public class PostController {
         // 카테고리가 없거나 'NOTICE'가 아닌 일반 게시판만 필터링
         model.addAttribute("boardList", boardService
                 .getList().stream().filter(b -> b.getCategory() == null || !"NOTICE".equals(b.getCategory())).toList());
+
 
         // 이전/다음 게시물 조회
         var previousPost = postService.getPreviousPost(boardId, id);
@@ -312,5 +322,21 @@ public class PostController {
         }
 
         return "redirect:/board/{boardId}/post/list";
+    }
+
+    // 좋아요 토글 API
+    @PostMapping("/like/{postId}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> toggleLike(
+            @PathVariable Long boardId,
+            @PathVariable Long postId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다."));
+        }
+
+        Map<String, Object> result = postService.toggleLike(postId, userDetails.getId());
+        return ResponseEntity.ok(result);
     }
 }
