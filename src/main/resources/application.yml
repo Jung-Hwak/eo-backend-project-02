@@ -18,6 +18,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: true
 
   jpa:
     defer-datasource-initialization: true
@@ -34,7 +36,7 @@ spring:
         use_sql_comments: false
 
   thymeleaf:
-    prefix: file:src/main/resources/templates/
+    prefix: classpath:/templates/
     cache: false
 
   data:
