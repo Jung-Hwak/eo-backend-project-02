@@ -299,33 +299,6 @@ messages (쪽지)
 | GET | `/admin/comments` | 댓글 전체 조회 (페이징) |
 | DELETE | `/admin/comments/{commentId}` | 댓글 삭제 |
 
----
-
-##  검색 및 페이징
-
-`Criteria` 객체를 통해 페이지 정보와 검색 조건을 전달합니다.
-
-| 파라미터 | 기본값 | 설명 |
-|----------|--------|------|
-| `page` | 1 | 페이지 번호 |
-| `size` | 10 | 페이지당 항목 수 |
-| `searchType` | `""` | 검색 타입 |
-| `keyword` | `""` | 검색 키워드 |
-
-**검색 타입 종류**
-
-| 타입 | 설명 |
-|------|------|
-| `title` | 제목 검색 |
-| `content` | 내용 검색 |
-| `writer` | 작성자(닉네임) 검색 |
-| `titleContent` | 제목 + 내용 검색 |
-| `commentContent` | 댓글 내용 검색 |
-| `commentWriter` | 댓글 작성자 검색 |
-
-인기 게시글 기준: `viewCount` 내림차순 TOP 10
-
----
 
 ##  도메인별 유효성 검증
 
@@ -343,7 +316,7 @@ messages (쪽지)
 
 ---
 
-## ⚙️ 서비스 주요 로직
+## 서비스 주요 로직
 
 **UserService**
 - 회원가입 시 username / nickname / email 중복 체크 후 BCrypt 암호화 저장
